@@ -16,5 +16,8 @@
     "nodemon": "^1.17.1",
     "opn": "^5.2.0",
     "self-signed-https": "^1.0.5"
+  },
+  "devDependencies": {
+    "jasmine": "^3.1.0"
   }
 }
