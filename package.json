@@ -11,8 +11,6 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.16.2",
-    "express-force-ssl": "^0.3.2",
-    "force-ssl": "^1.0.5",
     "nodemon": "^1.17.1",
     "opn": "^5.2.0",
     "self-signed-https": "^1.0.5"
