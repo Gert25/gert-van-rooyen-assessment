@@ -12,7 +12,6 @@ describe('Testing Suite', () => {
         it('test if Tweets text exist', () => {
             expect(fs.existsSync(pathToTweets)).toBe(true)
         })
-
         describe('Opening Files With File Handler:', () => {
             beforeAll(() => {
                 this.userFileHandler = new fileHander()
@@ -29,7 +28,7 @@ describe('Testing Suite', () => {
             })
 
             it('opening file ', () => {
-                this.fileOutput = this.userFileHandler.openFile()
+                this.fileOutput = this.userFileHandler.openFileAsUtf8()
                 expect(this.fileOutput).toBeDefined()
             })
 
