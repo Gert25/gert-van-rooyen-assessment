@@ -83,6 +83,7 @@ app.get('/', (req, res) => {
         .then(
             () => {
                 console.log(twitterFeed.userDetail)
+                res.send('Hello World!')
             })
 
 })
