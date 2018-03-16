@@ -82,19 +82,7 @@ app.get('/', (req, res) => {
     Promise.all(ls)
         .then(
             () => {
-                var stringBuilder = ''
-                var users = twitterFeed.getUsers()
-                for (var i = 0; i < users.length; i++) {
-                    var user = users[i]
-                    stringBuilder += user + '\n'
-                    twitterFeed.userDetail.get(user)
-                        .messages.forEach(message => {
-                            stringBuilder += message + '\n'
-                        })
-
-
-                }
-                console.log(stringBuilder)
+                console.log(twitterFeed.userDetail)
             })
 
 })
