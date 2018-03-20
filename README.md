@@ -34,3 +34,6 @@ The test scripts are stored under the ./spec/serverTest/spec.js. The test report
 
 **The ouput of the project is not exactly as specified in the assignment. But it shows proof of concept**. The output is displayed in the console. The output is structred well within a javascript Map object wich contains the user's names as keys and the value of each name pair will give you the messages of the user as well as the users that follows the respective user.
 
+**important**
+The server will only output the result when a successful connection to the browser is made. Since the server uses a self-signed certificate you need to allow the browser to make the connection. 
+
