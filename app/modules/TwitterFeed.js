@@ -37,7 +37,10 @@ var getPosition = function (mainsString, searchedString) {
         return null
     }
 }
-
+/**
+ * Creates an user entry 
+ * @param {string} user 
+ */
 var setUser = function (user) {
     if (typeof user === 'string') {
         if (!this.userDetail.has(user)) {
@@ -49,6 +52,10 @@ var setUser = function (user) {
         }
     }
 }
+/**
+ * Creates an array of users
+ * @param {Array} users 
+ */
 var setUsers = function (users) {
 
     if (!(typeof users === 'undefined')) {
@@ -62,6 +69,12 @@ var setUsers = function (users) {
         }
     }
 }
+
+/**
+ * Sets the corresponding @followers for the user @key
+ * @param {string} key 
+ * @param {*} followers 
+ */
 var setUserFollowers = function (key, followers) {
 
     if (this.userDetail.has(key)) {
@@ -72,28 +85,50 @@ var setUserFollowers = function (key, followers) {
         var user = this.setUser(key)
         user.get(key).followers.addMany(followers)
     }
-    console.log("Followers", followers)
+
     //Since Followers are also users we set them as well
     this.setUsers(followers)
 
 }
+
+/**
+ * Gets the corresponding messages for the user
+ * @param {string} name 
+ */
 var getMessages = function (name) {
-    var messages = []
-    if (this.userDetail.has(name)) {
-        var val = this.userDetail.get(name)
-        messages = val.messages
-    }
-    return messages
+    return new Promise(
+        (resolve, reject) => {
+            if (this.userDetail.has(name)) {
+                var val = this.userDetail.get(name)
+                var messages = ''
+                for (var message of val.messages) {
+                    messages += "@" + name + ":" + message + '\n'
+                }
+                resolve(messages)
+            }
+            else {
+                reject("No user exists with the name " + name)
+            }
+        })
 }
+/**
+ * Receives an array of records (tweets) and creates the 
+ * neccessary structure to associate tweets with respective user
+ * @param {Array<string>} tweetsRecors 
+ * Return an Map structure with user and tweet association
+ */
 var setTweets = function (tweetsRecors) {
     return new Promise((resolve, reject) => {
         if (Array.isArray(tweetsRecors)) {
             var setMessages = tweet => {
                 if (typeof tweet === 'string') {
                     var isMessage = tweet.includes('>')
+
                     if (isMessage) {
                         var positionIndex = getPosition(tweet, '>')
+
                         if (positionIndex) {
+
                             var startIndex = positionIndex.startIndex
                             var endIndex = positionIndex.endIndex
                             var userName = tweet.substr(0, startIndex).trim()
@@ -135,6 +170,11 @@ var setTweets = function (tweetsRecors) {
 
 }
 
+/**
+ * Recieves an array of user records and builds a Map object
+ * that associates users with ther corresponding followers
+ * @param {Array<string>} userRecords 
+ */
 var setUserRecords = function (userRecords) {
 
     return new Promise((resolve, reject) => {
@@ -175,30 +215,35 @@ var setUserRecords = function (userRecords) {
 
 }
 
-var getUsers = function () {
-    var users = []
-    var forEachUser = function (value, key, map) {
-        users.push(key)
-    }
-    this.userDetail.forEach(forEachUser)
-    return users
-}
+/**
+ * returns the names of all the followers for the respective name
+ * @param name the name of the user 
+ * @returns a name-value pair where the key is the name of the user and the value 
+ * is the respective followers 
+ */
 var getFollowers = function (name) {
-    var userValue = this.userDetail.get(name)
-    var followers = []
-    if (userValue) {
-        var getFollowers = function (key, val, set) {
-            followers.push(key)
+    return new Promise((resolve, reject) => {
+        if (this.userDetail.has(name)) {
+            var val = this.userDetail.get(name)
+            var followers = []
+            for (var follower of val.followers) {
+                followers.push(follower)
+            }
+            resolve({ name: name, followers: followers })
         }
-        userValue.followers.forEach(getFollowers)
-    }
-    return followers
+        else {
+            reject('No User exist with name ' + name)
+        }
+    })
 }
+
+/**
+ * @constructor Default constructor
+ */
 function TwitterFeed() {
     this.userDetail = new Map()
     this.setUserRecords = setUserRecords
     this.getFollowers = getFollowers
-    this.getUsers = getUsers
     this.setTweets = setTweets
     this.getMessages = getMessages
     this.setUserFollowers = setUserFollowers

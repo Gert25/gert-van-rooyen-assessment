@@ -9,6 +9,7 @@ var key = fs.readFileSync('ssl/server.key')
 var cert = fs.readFileSync('ssl/server.crt')
 var FileHandler = require('./app/modules/FileHandler')
 var TwitterFeed = require('./app/modules/TwitterFeed')
+
 var options = {
     key: key,
     cert: cert,
@@ -19,8 +20,6 @@ var options = {
 
 var httpServer = http.createServer(app)
 var httpsServer = https.createServer(options, app)
-
-
 
 app.get('*', (req, res, next) => {
     //check if the connection is secured
@@ -41,13 +40,13 @@ app.get('/', (req, res) => {
     var tweetsFileHandler = new FileHandler()
     var twitterFeed = new TwitterFeed()
 
-    bodyResult = null
-    var UserMap = new Map()
+    //Get Files
     var userPath = 'app/resources/user.txt'
     var tweetsPath = 'app/resources/tweet.txt'
     userFileHandler.setPath(userPath)
     tweetsFileHandler.setPath(tweetsPath)
-    // retrieve files once a secure connection has been established
+
+    // Set user and corresponding followers
     var openUserRecords = userText => {
         if (typeof userText === 'string') {
             var userRecords = userText.trim().split('\r\n')
@@ -58,8 +57,6 @@ app.get('/', (req, res) => {
                         for (var key of keys) {
                             twitterFeed.setUserFollowers(key, value[key])
                         }
-
-
                     })
                 .catch(
                     reason => {
@@ -67,7 +64,6 @@ app.get('/', (req, res) => {
                     }
                 )
         }
-
     }
     var openUser = userFileHandler.openFileAsUtf8()
         .then(openUserRecords)
@@ -79,14 +75,14 @@ app.get('/', (req, res) => {
         var tweetRecords = text.split('\n')
         twitterFeed.setTweets(tweetRecords)
             .then(value => {
-                console.log("Tweets Success", value)
+                console.log("@Value", value)
+
             })
             .catch(
                 reason => {
-                    console.error("tweets error", value)
+                    console.error("ERROR -", value)
                 }
             )
-
     }
 
     var openTweets = tweetsFileHandler.openFileAsUtf8()
@@ -95,22 +91,25 @@ app.get('/', (req, res) => {
             console.log(e)
         })
 
-
-
+    Promise.all([openTweets, openUser])
+        .then(value => {
+            res.send('See Console Output')
+        })
+        .catch(
+            reason => {
+                res.status(500).send('ERROR - ' + reason)
+            }
+        )
 })
 
 httpServer.listen(8080)
 httpsServer.listen(8000)
 
-httpsServer.on('listen', () => {
-    console.log("NEW SESSION")
-})
-
 // open app in defualt browser.
 opn('http://localhost:8080')
     .then(process => {
-        console.log("Process Spawned", process)
+        console.log("SERVER STARTED")
     })
     .catch(reason => {
-        console.log('ERROR-', reason)
+        console.log('ERROR -', reason)
     })

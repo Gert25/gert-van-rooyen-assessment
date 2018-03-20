@@ -2,7 +2,7 @@ var fs = require('fs')
 var fileHander = require('../../app/modules/FileHandler')
 var pathToUsers = __dirname + '/../../app/resources/user.txt'
 var pathToTweets = __dirname + '/../../app/resources/tweet.txt'
-describe('Testing Suite', () => {
+describe('Testing Files', () => {
     console.log("Dir", __dirname)
 
     describe('test if files exist', () => {
