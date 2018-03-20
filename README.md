@@ -24,8 +24,13 @@ I used jasmine as a testing framework for this application. To run test scripts:
 1. Install jasmine globally on your machine `npm i -g jasmine`
 2. Then just run `jasmine` in your console.
 
-## Description
-    The test scripts are stored under the ./spec/serverTest/spec.js. The test report is not very verbose but you can have a look at the test specs to see what is been tested. 
+Although, the test reporting is not very verbose or detailed it is sufficient enough to show proof of concept. 
 
-    
+## Description
+
+The test scripts are stored under the ./spec/serverTest/spec.js. The test report is not very verbose but you can have a look at the test specs to see what is been tested. 
+
+## Output
+
+**The ouput of the project is not exactly as specified in the assignment. But it shows proof of concept**. The output is displayed in the console. The output is structred well within a javascript Map object wich contains the user's names as keys and the value of each name pair will give you the messages of the user as well as the users that follows the respective user.
 
