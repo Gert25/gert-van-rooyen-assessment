@@ -50,8 +50,22 @@ app.get('/', (req, res) => {
     // retrieve files once a secure connection has been established
     var openUserRecords = userText => {
         if (typeof userText === 'string') {
-            var userRecords = userText.trim().split('\n')
+            var userRecords = userText.trim().split('\r\n')
             twitterFeed.setUserRecords(userRecords)
+                .then(
+                    value => {
+                        var keys = Object.keys(value)
+                        for (var key of keys) {
+                            twitterFeed.setUserFollowers(key, value[key])
+                        }
+
+
+                    })
+                .catch(
+                    reason => {
+                        console.error("Error", reason)
+                    }
+                )
         }
 
     }
@@ -60,14 +74,18 @@ app.get('/', (req, res) => {
         .catch(e => {
             console.error("ERROR - ", e)
         })
-        .then(() => {
-
-
-        })
 
     var openTweetRecords = text => {
         var tweetRecords = text.split('\n')
         twitterFeed.setTweets(tweetRecords)
+            .then(value => {
+                console.log("Tweets Success", value)
+            })
+            .catch(
+                reason => {
+                    console.error("tweets error", value)
+                }
+            )
 
     }
 
@@ -77,14 +95,7 @@ app.get('/', (req, res) => {
             console.log(e)
         })
 
-    var ls = []
-    ls.push(openUser, openTweets)
-    Promise.all(ls)
-        .then(
-            () => {
-                console.log(twitterFeed.userDetail)
-                res.send('Hello World!')
-            })
+
 
 })
 
